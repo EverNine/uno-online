@@ -1,11 +1,16 @@
 (function() {
 
-    function Card(x,y,n,c) {
+    function Card(n,c) {
         this.Container_constructor();
-        this.x = x;
-        this.y = y;
         this.width = 200;
         this.height = 300;
+        this.regX = 100;
+        this.regY = 150;
+        this.scale = globalScale;
+        this.scaleX = globalScale;
+        this.scaleY = globalScale;
+        this.oriX = null;
+        this.oriY = null;
         if(typeof(n) == "undefined")
         {
             this.drawback(0);

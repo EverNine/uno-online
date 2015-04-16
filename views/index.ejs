@@ -13,18 +13,50 @@
 <html>
     <head></head>
     <body onload="init();">
-        <canvas id="demoCanvas" width="1024" height="768"></canvas>
+        <canvas id="demoCanvas" width="1400" height="768"></canvas>
     </body>
     <script src="javascripts/createjs.min.js"></script>
     <script src="javascripts/card.js"></script>
+    <script src="javascripts/hand.js"></script>
+    <script src="javascripts/table.js"></script>
     <script>
 
+var globalScale = 1;
+var canvas = document.getElementById("demoCanvas");
+var stage = new createjs.Stage(canvas);
+var myCards = new Hand(30,canvas.height/4*3,canvas.width/2,canvas.height/3);
+var table = new Table(canvas.width/5, 0, canvas.width/5*3, canvas.height/3*2);
+var update = true;
 
 function init() {
-    var stage = new createjs.Stage("demoCanvas");
-    var card = new Card(50,50);
-    stage.addChild(card);
-    stage.update();
+
+    stage.enableMouseOver(10);
+
+    stage.addChild(table);
+    stage.addChild(myCards);
+    
+    var card = new Card(3,1);
+    myCards.addCard(card);
+    card = new Card(5,2);
+    myCards.addCard(card);
+    card = new Card(6,2);
+    myCards.addCard(card);
+    card = new Card(9,1);
+    myCards.addCard(card);
+    card = new Card(-1,4);
+    myCards.addCard(card);
+    card = new Card(-2,3);
+    myCards.addCard(card);
+    card = new Card(-3,2);
+    myCards.addCard(card);
+    card = new Card(-4,1);
+    myCards.addCard(card);
+    card = new Card(-5,2);
+    myCards.addCard(card);
+    myCards.arrange();
+
+    createjs.Ticker.setFPS(30);
+    createjs.Ticker.addEventListener("tick", stage);
 }
 
     </script>
