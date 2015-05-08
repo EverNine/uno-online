@@ -9,6 +9,8 @@ function Hand(x ,y, w, h) {
     this.scale = globalScale;
     this.scaleX = globalScale;
     this.scaleY = globalScale;
+    this.regX = w/2;
+    this.regY = h/2;
 	
 	this.setup();
 }

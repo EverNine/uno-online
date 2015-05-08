@@ -19,12 +19,13 @@
     <script src="javascripts/card.js"></script>
     <script src="javascripts/hand.js"></script>
     <script src="javascripts/table.js"></script>
+    <script src="javascripts/other_hand.js"></script>
     <script>
 
 var globalScale = 1;
 var canvas = document.getElementById("demoCanvas");
 var stage = new createjs.Stage(canvas);
-var myCards = new Hand(30,canvas.height/4*3,canvas.width/2,canvas.height/3);
+var myCards = new Hand(canvas.width/4 ,canvas.height*0.9,canvas.width/2,canvas.height/3);
 var table = new Table(canvas.width/5, 0, canvas.width/5*3, canvas.height/3*2);
 var update = true;
 
@@ -35,6 +36,9 @@ function init() {
     stage.addChild(table);
     stage.addChild(myCards);
     
+    var player1 = new OtherHand(7, canvas.width/2, 0, canvas.width/2, canvas.height/3, 180, 0.5);
+    stage.addChild(player1);
+
     var card = new Card(3,1);
     myCards.addCard(card);
     card = new Card(5,2);
