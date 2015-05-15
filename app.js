@@ -4,14 +4,14 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
-
-var mongoose = require('mongoose');
-var db = mongoose.createConnection('localhost','test');
+var session = require('express-session');
+var RedisStore = require('connect-redis')(session);
 
 var routes = require('./routes/index');
 var users = require('./routes/users');
 var games = require('./routes/games');
 var test = require('./routes/test');
+var config = require('./config')
 
 var app = express();
 
@@ -24,9 +24,20 @@ app.set('view engine', 'ejs');
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
-app.use(cookieParser());
+app.use(cookieParser("uno-online_"));
 app.use(require('stylus').middleware(path.join(__dirname, 'public')));
 app.use(express.static(path.join(__dirname, 'public')));
+
+app.use(require('cookie-parser')(config.session_secret));
+app.use(session({
+  secret: config.session_secret,
+  store: new RedisStore({
+    port: config.redis_port,
+    host: config.redis_host,
+  }),
+  resave: true,
+  saveUninitialized: true,
+}));
 
 app.use('/', routes);
 app.use('/users', users);
