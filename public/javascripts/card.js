@@ -11,6 +11,12 @@
         this.scaleY = globalScale;
         this.oriX = null;
         this.oriY = null;
+        this.turn(n,c);
+    };
+
+    var p = createjs.extend(Card, createjs.Container);
+
+    p.turn = function(n,c){
         if(typeof(n) == "undefined")
         {
             this.drawback(0);
@@ -41,8 +47,7 @@
             this.setup();
         else
             this.spSetup();
-    }
-    var p = createjs.extend(Card, createjs.Container);
+    };
 
     p.drawback = function(x){
         var background = new createjs.Shape();

@@ -7,5 +7,14 @@
   <body>
     <h1><%= title %></h1>
     <p>Welcome to <%= title %></p>
+
+    <script src="javascripts/jquery.min.js"></script>
+    <script src="socket.io/socket.io.js"> </script>
+    <script>
+      $(function() {
+        var socket = io();
+        socket.emit("new", {abc: "hello", cba: "world"});
+      });
+    </script>
   </body>
 </html>
