@@ -27,13 +27,17 @@ var server = http.createServer(app);
 
 var io = require('socket.io')(server)
 var SessionSockets = require('session.socket.io');
-var sessionSockets = new SessionSockets(io, sessionStore, cookieParser);
+var sessionSockets = new SessionSockets(io, app.sessionStore, app.cookieParser);
 
 sessionSockets.on("connection", function(err, socket, session){
   console.log("Create a connection!")
   socket.on("new",function(data){
     console.log(data.cba);
+    session.foo = 'bar';
   });
+  socket.on("old",function(data){
+    console.log(session.foo);
+  })
 });
 
 /**

@@ -19,22 +19,24 @@ var app = express();
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 
+app.sessionStore = new RedisStore({
+  port: config.redis_port,
+  host: config.redis_host,
+});
+app.cookieParser = cookieParser(config.session_secret);
+
 // uncomment after placing your favicon in /public
 //app.use(favicon(__dirname + '/public/favicon.ico'));
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
-app.use(cookieParser("uno-online_"));
+app.use(app.cookieParser);
 app.use(require('stylus').middleware(path.join(__dirname, 'public')));
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use(require('cookie-parser')(config.session_secret));
 app.use(session({
   secret: config.session_secret,
-  store: new RedisStore({
-    port: config.redis_port,
-    host: config.redis_host,
-  }),
+  store: app.sessionStore,
   resave: true,
   saveUninitialized: true,
 }));
