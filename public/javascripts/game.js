@@ -1,44 +1,42 @@
 var globalScale = 1;
-var canvas = document.getElementById("demoCanvas");
+var canvas = document.getElementById("Canvas");
 var stage = new createjs.Stage(canvas);
 var myCards = new Hand(canvas.width/4 ,canvas.height*0.9,canvas.width/2,canvas.height/3);
 var table = new Table(canvas.width/5, 0, canvas.width/5*3, canvas.height/3*2);
 var update = true;
+var socket = io();
+var player1;
 
 function init() {
 
-    stage.enableMouseOver(10);
+  stage.enableMouseOver(10);
 
-    stage.addChild(table);
-    stage.addChild(myCards);
-    
-    var player1 = new OtherHand(7, canvas.width/2, 0, canvas.width/2, canvas.height/3, 180, 0.5);
-    stage.addChild(player1);
+  stage.addChild(table);
+  stage.addChild(myCards);
 
-    var card = new Card(3,1);
-    myCards.addCard(card);
-    card = new Card(5,2);
-    myCards.addCard(card);
-    card = new Card(6,3);
-    myCards.addCard(card);
-    card = new Card(9,1);
-    myCards.addCard(card);
-    card = new Card(-1,4);
-    myCards.addCard(card);
-    card = new Card(-2,3);
-    myCards.addCard(card);
-    card = new Card(-3,2);
-    myCards.addCard(card);
-    card = new Card(-4,1);
-    myCards.addCard(card);
-    card = new Card(-5,4);
+  player1 = new OtherHand(7, canvas.width/2, 0, canvas.width/2, canvas.height/3, 180, 0.5);
+  stage.addChild(player1);
+
+  socket.emit("initHand");
+  socket.on("newCard", function(data){
+    var cardNum = Math.floor(data.card / 10);
+    var cardColor = Math.abs(data.card) % 10;
+    var card = new Card(cardNum,cardColor);
     myCards.addCard(card);
     myCards.arrange();
+  });
 
-    var board = new ColorBoard(canvas.width/2, canvas.height/2);
-    stage.addChild(board);
+  socket.on("playCard", function(data){
+    var cardNum = Math.floor(data.card / 10);
+    var cardColor = Math.abs(data.card) % 10;
+    var card = new Card(cardNum,cardColor);
+    player1.playCard(card);
+  });
 
-    createjs.Ticker.setFPS(24);
-    createjs.Ticker.addEventListener("tick", stage);
+  //var board = new ColorBoard(canvas.width/2, canvas.height/2);
+  //stage.addChild(board);
+
+  createjs.Ticker.setFPS(24);
+  createjs.Ticker.addEventListener("tick", stage);
 }
 

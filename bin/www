@@ -28,6 +28,7 @@ var server = http.createServer(app);
 var io = require('socket.io')(server)
 var SessionSockets = require('session.socket.io');
 var sessionSockets = new SessionSockets(io, app.sessionStore, app.cookieParser);
+var id = 0;
 
 sessionSockets.on("connection", function(err, socket, session){
   console.log("Create a connection!")
@@ -37,7 +38,20 @@ sessionSockets.on("connection", function(err, socket, session){
   });
   socket.on("old",function(data){
     console.log(session.foo);
+  });
+  socket.join(session.game_id);
+  socket.on("initHand", function(data){
+    socket.emit("newCard", {card: -13});
+    socket.emit("newCard", {card: 12});
+    socket.emit("newCard", {card: 34});
+    socket.emit("newCard", {card: 82});
+    socket.emit("newCard", {card: 02});
+    socket.emit("newCard", {card: -21});
+    socket.emit("newCard", {card: 21});
   })
+  socket.on("playCard", function(data){
+    socket.in(session.game_id).emit("playCard", {card: 21});
+  });
 });
 
 /**
